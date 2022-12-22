@@ -1,0 +1,23 @@
+CLUSTER_PLAN: dev
+
+INFRASTRUCTURE_PROVIDER: vsphere
+IDENTITY_MANAGEMENT_TYPE: none
+ENABLE_CEIP_PARTICIPATION: "false"
+
+VSPHERE_SERVER: "${vcenter_server}"
+VSPHERE_USERNAME: "${vcenter_user}"
+VSPHERE_PASSWORD: "${vcenter_password}"
+VSPHERE_DATACENTER: "${datacenter}"
+VSPHERE_DATASTORE: "${datastore}"
+VSPHERE_NETWORK: "${network}"
+VSPHERE_RESOURCE_POOL: "${resource_pool}"
+VSPHERE_FOLDER: "${vm_folder}"
+VSPHERE_INSECURE: "true"
+
+CLUSTER_CIDR: 100.96.0.0/11
+SERVICE_CIDR: 100.64.0.0/13
+
+CONTROLPLANE_SIZE: "medium"
+WORKER_SIZE: "large"
+
+OS_NAME: "ubuntu"
