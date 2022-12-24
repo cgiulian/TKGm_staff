@@ -7,6 +7,68 @@ This repository is also compatible with
 [Tanzu Community Edition](https://tanzucommunityedition.io) (TCE),
 the open source version of TKG.
 
+## Files Explanation
+
+env.tpl -> Variable definition file for:
+  HTTP_PROXY_HOST=${http_proxy_host}
+  HTTP_PROXY_PORT=${http_proxy_port}
+  CONTROL_PLANE_ENDPOINT=${control_plane_endpoint}
+  
+govc.tpl  -> Variable definition file for govc integration (APIs toward vSphere)
+  export GOVC_URL=${vsphere_server}
+  export GOVC_USERNAME=${vsphere_user}
+  export GOVC_PASSWORD=${vsphere_password}
+  export GOVC_INSECURE=true
+
+main.tf -> pointers to vsphere provider:
+  provider "vsphere" {
+    user                 = var.vsphere_user
+    password             = var.vsphere_password
+    vsphere_server       = var.vsphere_server
+    allow_unverified_ssl = true
+  }
+  
+setup-jumpbox.sh -> bash script to install all required software for bootstrap vm. Read through the script to customize or disaable any componenet
+
+terraform.tfstate -> autopopulated file with terraform state once executed
+
+terraform.tfvars -> file with details of vsphere environment (below my last lab details)
+  vsphere_password = "!8D1ixprxA6KmzPWB3M"
+  vsphere_user	 = "administrator@vsphere.local"
+  vsphere_server   = "vc01.h2o-3-4241.h2o.vmware.com"
+  network          = "user-workload"
+  datastore_url    = "ds:///vmfs/volumes/vsan:529aba229313b8dc-1115c743db4b2b62"
+  datacenter       = "vc01"
+  datastore        = "vsanDatastore"
+  tanzu_cli_file_name = "tanzu-cli-bundle-linux-amd64.tar.gz"
+  cluster           = "vc01cl01"
+  vm_folder         = "tkg"
+  # Management control plane endpoint.
+  control_plane_endpoint = "10.220.59.35" #Static IP that has to be defined upfront from the workload network
+
+tkg-cluster.yml.tpl -> definition file for TKGm deployment
+  CLUSTER_PLAN: dev
+  INFRASTRUCTURE_PROVIDER: vsphere
+  IDENTITY_MANAGEMENT_TYPE: none
+  ENABLE_CEIP_PARTICIPATION: "false"
+  VSPHERE_SERVER: "${vcenter_server}"
+  VSPHERE_USERNAME: "${vcenter_user}"
+  VSPHERE_PASSWORD: "${vcenter_password}"
+  VSPHERE_DATACENTER: "${datacenter}"
+  VSPHERE_DATASTORE: "${datastore}"
+  VSPHERE_NETWORK: "${network}"
+  VSPHERE_RESOURCE_POOL: "${resource_pool}"
+  VSPHERE_FOLDER: "${vm_folder}"
+  VSPHERE_INSECURE: "true"
+  CLUSTER_CIDR: 100.96.0.0/11
+  SERVICE_CIDR: 100.64.0.0/13
+  CONTROLPLANE_SIZE: "medium"
+  WORKER_SIZE: "medium"
+  OS_NAME: "ubuntu"
+  
+variables.tf -> variables type and default values definition
+vm-jumpbox.tf -> list of steps for jumpbox creation inside vsphere and copy of all needed files for TKG deployment operated from jumphost itself
+
 ## Prerequisites
 
 ### Download components
@@ -101,6 +163,8 @@ At the end of this process, you can retrieve the jumpbox IP address:
 $ terraform output jumpbox_ip_address
 10.160.28.120
 ```
+
+![Graphycal output after terrafor run](images/vsphere-deploy-ovf-part1.png)
 
 You may connect to the jumpbox VM using account `ubuntu`.
 
