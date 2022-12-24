@@ -43,7 +43,6 @@ terraform.tfvars -> file with details of vsphere environment (below my last lab 
   tanzu_cli_file_name = "tanzu-cli-bundle-linux-amd64.tar.gz"
   cluster           = "vc01cl01"
   vm_folder         = "tkg"
-  # Management control plane endpoint.
   control_plane_endpoint = "10.220.59.35" #Static IP that has to be defined upfront from the workload network
 
 tkg-cluster.yml.tpl -> definition file for TKGm deployment
