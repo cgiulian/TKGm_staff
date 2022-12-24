@@ -186,12 +186,16 @@ $ tanzu management-cluster create --file $HOME/.config/tanzu/tkg/clusterconfigs/
 This process takes less than 10 minutes.
 
 In case you get the error:
+
   Error: unable to set up management cluster: unable to build management cluster configuration: unable to get template: 
   - assert.fail: fail: missing configuration variables: VSPHERE_PASSWORD
 
-  Create a new user with appropriate rights and assign a password without "strange" characters and encode it with:
+  Create a new user in vcenter with appropriate rights, assign a password without "strange" characters, encode it with:
+  
     echo -n 'my-string' | base64
+    
   then, replace username and password in ~/.config/tanzu/tkg/config.yaml:
+  
     VSPHERE_USERNAME: "your_new_user"
     VSPHERE_PASSWORD: "<encoded:your_encoded_password"
     
