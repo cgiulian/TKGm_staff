@@ -164,7 +164,7 @@ $ terraform output jumpbox_ip_address
 10.160.28.120
 ```
 
-![Graphycal output after terrafor run](images/vsphere-deploy-ovf-part1.png)
+![Graphycal output after terrafor run](images/Jumpbox deployed.png)
 
 You may connect to the jumpbox VM using account `ubuntu`.
 
@@ -186,6 +186,18 @@ $ tanzu management-cluster create --file $HOME/.config/tanzu/tkg/clusterconfigs/
 
 This process takes less than 10 minutes.
 
+In case you get the error:
+  Error: unable to set up management cluster: unable to build management cluster configuration: unable to get template: 
+  - assert.fail: fail: missing configuration variables: VSPHERE_PASSWORD
+
+  Create a new user with appropriate rights and assign a password without "strange" characters and encode it with:
+    echo -n 'my-string' | base64
+  then, replace username and password in ~/.config/tanzu/tkg/config.yaml:
+    VSPHERE_USERNAME: "your_new_user"
+    VSPHERE_PASSWORD: "<encoded:your_encoded_password"
+    
+![Graphycal output after management-cluster create](images/Management cluster deployed.png)
+
 ## Create TKG workload clusters
 
 You can now create workload clusters.
@@ -199,7 +211,7 @@ adjusting the control plane endpoint
 ```yaml
 CLUSTER_NAME: dev01
 CLUSTER_PLAN: dev
-VSPHERE_CONTROL_PLANE_ENDPOINT: 192.168.100.10
+VSPHERE_CONTROL_PLANE_ENDPOINT: "10.220.59.40"
 ```
 
 Create the workload cluster:
@@ -208,6 +220,8 @@ $ tanzu cluster create --file $HOME/.config/tanzu/tkg/clusterconfigs/dev01-clust
 ```
 
 This process takes less than 5 minutes.
+
+![Graphycal output after workload-cluster create](images/Workload cluster deployed.png)
 
 Create a `kubeconfig` file to access your workload cluster:
 ```bash
@@ -246,8 +260,14 @@ The workload cluster you created already includes a vSphere CSI.
 
 The only thing you need to do is to apply a configuration file, designating the
 vSphere datastore to use when creating Kubernetes persistent volumes.
+The file is located in this repository and has to be run from personal workstation.
 
 Use generated file `vsphere-storageclass.yml`:
+```bash
+$ KUBECONFIG=dev01.kubeconfig kubectl apply -f vsphere-storageclass.yml
+```
+
+or from jumphost if `vsphere-storageclass.yml` has been copied over:
 ```bash
 $ kubectl apply -f vsphere-storageclass.yml
 ```
