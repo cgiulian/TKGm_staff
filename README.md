@@ -163,7 +163,7 @@ $ terraform output jumpbox_ip_address
 10.160.28.120
 ```
 
-![Graphycal output after terrafor run](images/Jumpbox deployed.png)
+![Graphycal output after terrafor run](images/Jumpbox-deployed.png)
 
 You may connect to the jumpbox VM using account `ubuntu`.
 
@@ -195,7 +195,7 @@ In case you get the error:
     VSPHERE_USERNAME: "your_new_user"
     VSPHERE_PASSWORD: "<encoded:your_encoded_password"
     
-![Graphycal output after management-cluster create](images/Management cluster deployed.png)
+![Graphycal output after management-cluster create](images/Management-cluster-deployed.png)
 
 ## Create TKG workload clusters
 
@@ -220,7 +220,7 @@ $ tanzu cluster create --file $HOME/.config/tanzu/tkg/clusterconfigs/dev01-clust
 
 This process takes less than 5 minutes.
 
-![Graphycal output after workload-cluster create](images/Workload cluster deployed.png)
+![Graphycal output after workload-cluster create](images/Workload-cluster-deployed.png)
 
 Create a `kubeconfig` file to access your workload cluster:
 ```bash
